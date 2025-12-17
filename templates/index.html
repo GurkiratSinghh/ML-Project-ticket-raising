@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | Resolution Desk</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Prata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --portal-navy: #0a0f18;
+            --brand-accent: #c2a371; /* Champagne Gold */
+            --surface-white: #ffffff;
+            --body-bg: #f4f5f7;
+            --text-main: #1a1a1a;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+        }
+
+        /* Sidebar - Merchant Identity */
+        .sidebar {
+            background-color: var(--portal-navy);
+            min-height: 100vh;
+            position: fixed;
+            width: 260px;
+            padding: 2rem 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            font-family: 'Prata', serif;
+            color: var(--brand-accent);
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-group-label {
+            color: #495057;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: #a0a0a0;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+
+        .nav-link i { margin-right: 15px; font-size: 1.2rem; }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--surface-white);
+            background: rgba(255,255,255,0.05);
+            border-left-color: var(--brand-accent);
+        }
+
+        /* Main Workspace */
+        .content-wrapper {
+            margin-left: 260px;
+            padding: 3rem 4rem;
+        }
+
+        .welcome-banner {
+            margin-bottom: 3rem;
+        }
+
+        .welcome-banner h2 {
+            font-family: 'Prata', serif;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Support Card */
+        .resolution-card {
+            background: var(--surface-white);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        .card-inner { padding: 3rem; }
+
+        /* Form Styling */
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--portal-navy);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-control {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.25rem;
+            background-color: #fafafa;
+            resize: none;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--brand-accent);
+            background-color: #fff;
+        }
+
+        /* Status Sidebar */
+        .status-panel {
+            background-color: #fcfaf7;
+            border-left: 1px solid #f0e6d6;
+            height: 100%;
+            padding: 3rem;
+        }
+
+        /* Reduced Size Submit Button */
+        .btn-submit {
+            background-color: var(--portal-navy);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem; /* Reduced padding */
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem; /* Smaller font */
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--brand-accent);
+            color: var(--portal-navy);
+        }
+
+        .badge-status {
+            background: #e1f5fe;
+            color: #01579b;
+            font-size: 0.75rem;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .meta-item {
+            margin-bottom: 2rem;
+        }
+
+        .meta-item small {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .meta-item p {
+            font-weight: 600;
+            margin: 0;
+            color: var(--portal-navy);
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar d-none d-lg-block">
+        <div class="sidebar-header">MODERNE</div>
+        
+        <div class="nav flex-column">
+            <div class="nav-group-label">Account Management</div>
+            <a href="#" class="nav-link"><i class="bi bi-person"></i> Profile Overview</a>
+            <a href="#" class="nav-link"><i class="bi bi-box-seam"></i> Order History</a>
+            <a href="#" class="nav-link"><i class="bi bi-heart"></i> My Wishlist</a>
+            
+            <div class="nav-group-label mt-4">Security & Support</div>
+            <a href="#" class="nav-link active"><i class="bi bi-headset"></i> Support Desk</a>
+            <a href="#" class="nav-link"><i class="bi bi-shield-lock"></i> Account Privacy</a>
+        </div>
+    </aside>
+
+    <main class="content-wrapper">
+        <div class="welcome-banner">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted small">Account</a></li>
+                    <li class="breadcrumb-item active small" aria-current="page">Support</li>
+                </ol>
+            </nav>
+            <h2>Resolution Desk</h2>
+            <p class="text-muted">Initiate a formal inquiry regarding your account or transactions.</p>
+        </div>
+
+        <div class="resolution-card">
+            <div class="row g-0">
+                <div class="col-lg-7">
+                    <div class="card-inner">
+                        <form method="post" action="/submit">
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    Statement of Inquiry
+                                </label>
+                                <textarea name="user_query" class="form-control" rows="10" 
+                                    placeholder="Please provide comprehensive details regarding your request..." required></textarea>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-muted small">
+                                    <i class="bi bi-lightning-charge me-1"></i> Triage complete within few seconds.
+                                </span>
+                                <button type="submit" class="btn btn-submit">Submit Inquiry</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="status-panel">
+                        <h5 class="mb-4 fw-bold">Dispatch Summary</h5>
+                        
+                        {% if intent %}
+                        <div class="meta-item">
+                            <small>Case Classification</small>
+                            <p>{{ intent }}</p>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <small>Assigned Department</small>
+                            <p>{{ team }}</p>
+                        </div>
+
+                        <div class="meta-item">
+                            <small>Status</small>
+                            <div class="mt-2">
+                                <span class="badge-status">
+                                    <i class="bi bi-send-fill me-2"></i> {{ status }}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <p class="small text-muted mt-5">
+                            Our <strong>{{ team }}</strong> has been notified. A formal response will be dispatched to your registered email address.
+                        </p>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-journal-text fs-1 text-muted opacity-25"></i>
+                            <p class="text-muted mt-3 small">Awaiting inquiry details for automated department routing.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-5 text-center">
+            <p class="text-muted" style="font-size: 0.8rem; letter-spacing: 1px;">
+                &copy; 2025 MODERNE RETAIL GROUP. ALL RIGHTS RESERVED.
+            </p>
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
