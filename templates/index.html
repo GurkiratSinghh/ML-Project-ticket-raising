@@ -136,10 +136,10 @@
             background-color: var(--portal-navy);
             color: white;
             border: none;
-            padding: 0.6rem 1.5rem; /* Reduced padding */
+            padding: 0.6rem 1.5rem;
             border-radius: 6px;
             font-weight: 500;
-            font-size: 0.9rem; /* Smaller font */
+            font-size: 0.9rem;
             letter-spacing: 0.5px;
             transition: 0.3s;
         }
@@ -214,9 +214,7 @@
                     <div class="card-inner">
                         <form method="post" action="/submit">
                             <div class="mb-4">
-                                <label class="form-label">
-                                    Statement of Inquiry
-                                </label>
+                                <label class="form-label">Statement of Inquiry</label>
                                 <textarea name="user_query" class="form-control" rows="10" 
                                     placeholder="Please provide comprehensive details regarding your request..." required></textarea>
                             </div>
@@ -234,6 +232,15 @@
                     <div class="status-panel">
                         <h5 class="mb-4 fw-bold">Dispatch Summary</h5>
                         
+                        {% if warning %}
+                        <div class="meta-item">
+                            <small>Notice</small>
+                            <p class="text-warning fw-semibold">
+                                <i class="bi bi-exclamation-triangle me-1"></i> Please provide more details so we can assist you.
+                            </p>
+                        </div>
+                        {% endif %}
+
                         {% if intent %}
                         <div class="meta-item">
                             <small>Case Classification</small>
@@ -257,7 +264,7 @@
                         <p class="small text-muted mt-5">
                             Our <strong>{{ team }}</strong> has been notified. A formal response will be dispatched to your registered email address.
                         </p>
-                        {% else %}
+                        {% elif not warning %}
                         <div class="text-center py-5">
                             <i class="bi bi-journal-text fs-1 text-muted opacity-25"></i>
                             <p class="text-muted mt-3 small">Awaiting inquiry details for automated department routing.</p>
