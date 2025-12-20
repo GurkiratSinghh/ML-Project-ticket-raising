@@ -2,77 +2,72 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Configure Gemini
-if GEMINI_API_KEY:
+# Configure Gemini with a safety check
+if not GEMINI_API_KEY:
+    print("CRITICAL: GEMINI_API_KEY not found in environment variables.")
+else:
     genai.configure(api_key=GEMINI_API_KEY)
 
 MODEL_NAME = "gemini-2.0-flash"
 
-# Create model once (important)
 model = genai.GenerativeModel(
     MODEL_NAME,
     generation_config={
         "temperature": 0.2,
-        "max_output_tokens": 120
+        "max_output_tokens": 150,
     }
 )
 
-
 def elaborate_query_gemini(user_query: str, intent: str) -> str:
-    """Uses Gemini to rewrite the query into a professional summary."""
-
+    """Uses Gemini to rewrite the query into a professional summary with robust error handling."""
+    
     prompt = f"""
-You are an expert internal support coordinator for a luxury retail group.
-
-TASK: Convert the following customer query into a highly professional internal support summary.
-
-INPUT DETAILS:
-- User Intent: {intent}
-- User Query: "{user_query}"
-
-GUIDELINES:
-1. Rewrite it in exactly 2 sentences of polished, business-grade English.
-2. Maintain the original facts exactly.
-3. Use a tone suitable for a premium brand.
-4. Focus on the required action for the internal team.
-
-RESPONSE FORMAT:
-Provide ONLY the rewritten text.
-"""
+    You are an expert internal support coordinator for a luxury retail group.
+    TASK: Convert the following customer query into a highly professional internal support summary.
+    
+    INPUT:
+    - Intent: {intent}
+    - Query: "{user_query}"
+    
+    GUIDELINES:
+    1. Rewrite it in exactly 2 sentences of polished, business-grade English.
+    2. Maintain facts exactly. Use a premium, formal tone.
+    3. Focus on the required action for the team.
+    
+    RESPONSE FORMAT:
+    Provide ONLY the rewritten text. No introductions or conversational filler.
+    """
 
     try:
         response = model.generate_content(prompt)
-
-        # ✅ SAFE EXTRACTION (this is the fix)
-        if response and response.candidates:
-            parts = response.candidates[0].content.parts
-            if parts:
-                return parts[0].text.strip()
-
-        return user_query  # fallback if Gemini returns empty
+        
+        # The .text property is the safest way to get content. 
+        # If the response is blocked or empty, this will raise an AttributeError which we catch.
+        if response and response.text:
+            return response.text.strip()
+        
+        return user_query 
 
     except Exception as e:
+        # Log the specific error for debugging if needed: print(f"Gemini Error: {e}")
         return f"[Manual Review Required] {user_query}"
 
-
 def generate_email(user_query: str, intent: str, team: str) -> str:
-    """Combines Gemini summary into an internal email"""
-
+    """Combines summary into a clean, formatted internal email template."""
     professional_summary = elaborate_query_gemini(user_query, intent)
-
+    
     error_note = ""
     if professional_summary.startswith("[Manual Review Required]"):
-        error_note = "\n(Note: Automated elaboration service is temporarily unavailable.)\n"
+        error_note = "\n⚠️ ALERT: Automated summary failed. Please review original text.\n"
 
-    email = f"""
+    return f"""
 NEW SERVICE INQUIRY | {intent.upper()}
 --------------------------------------------------
-DEAR {team.upper()},
+DEAR {team.upper()} TEAM,
 
 A formal inquiry has been triaged and routed to your department.
 
@@ -86,10 +81,9 @@ ORIGINAL CUSTOMER STATEMENT:
 TECHNICAL DETAILS:
 - Classification: {intent}
 
-Please acknowledge this case and initiate the resolution process within the next business hour.
+Please acknowledge this case and initiate resolution within the service level agreement.
 
 REGARDS,
 MODERNE RESOLUTION SYSTEM
 --------------------------------------------------
-"""
-    return email.strip()
+""".strip()

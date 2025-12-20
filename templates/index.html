@@ -17,6 +17,7 @@
             --body-bg: #f4f5f7;
             --text-main: #1a1a1a;
             --text-muted: #6c757d;
+            --success-green: #2e7d32;
         }
 
         body {
@@ -95,6 +96,7 @@
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
             overflow: hidden;
+            min-height: 500px;
         }
 
         .card-inner { padding: 3rem; }
@@ -115,6 +117,7 @@
             padding: 1.25rem;
             background-color: #fafafa;
             resize: none;
+            transition: 0.3s;
         }
 
         .form-control:focus {
@@ -129,9 +132,14 @@
             border-left: 1px solid #f0e6d6;
             height: 100%;
             padding: 3rem;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
-        /* Reduced Size Submit Button */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         .btn-submit {
             background-color: var(--portal-navy);
             color: white;
@@ -157,6 +165,8 @@
             border-radius: 50px;
             font-weight: 600;
             text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
         }
 
         .meta-item {
@@ -176,6 +186,10 @@
             font-weight: 600;
             margin: 0;
             color: var(--portal-navy);
+        }
+
+        .spinner-border-sm {
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -212,17 +226,17 @@
             <div class="row g-0">
                 <div class="col-lg-7">
                     <div class="card-inner">
-                        <form method="post" action="/submit">
+                        <form id="queryForm" method="post" action="/submit">
                             <div class="mb-4">
                                 <label class="form-label">Statement of Inquiry</label>
-                                <textarea name="user_query" class="form-control" rows="10" 
-                                    placeholder="Please provide comprehensive details regarding your request..." required></textarea>
+                                <textarea name="user_query" id="user_query" class="form-control" rows="10" 
+                                    placeholder="Please provide comprehensive details regarding your request..." required>{{ query if query }}</textarea>
                             </div>
                             <div class="d-flex align-items-center justify-content-between">
                                 <span class="text-muted small">
-                                    <i class="bi bi-lightning-charge me-1"></i> Triage complete within few seconds.
+                                    <i class="bi bi-lightning-charge me-1"></i> AI Triage active.
                                 </span>
-                                <button type="submit" class="btn btn-submit">Submit Inquiry</button>
+                                <button type="submit" id="submitBtn" class="btn btn-submit">Submit Inquiry</button>
                             </div>
                         </form>
                     </div>
@@ -234,17 +248,18 @@
                         
                         {% if warning %}
                         <div class="meta-item">
-                            <small>Notice</small>
-                            <p class="text-warning fw-semibold">
-                                <i class="bi bi-exclamation-triangle me-1"></i> Please provide more details so we can assist you.
+                            <small>System Notice</small>
+                            <p class="text-danger fw-semibold">
+                                <i class="bi bi-exclamation-circle me-1"></i> 
+                                {{ error_message if error_message else "Please provide more details for accurate routing." }}
                             </p>
                         </div>
                         {% endif %}
 
-                        {% if intent %}
+                        {% if intent and not warning %}
                         <div class="meta-item">
                             <small>Case Classification</small>
-                            <p>{{ intent }}</p>
+                            <p class="text-uppercase" style="letter-spacing: 0.5px;">{{ intent }}</p>
                         </div>
                         
                         <div class="meta-item">
@@ -253,17 +268,27 @@
                         </div>
 
                         <div class="meta-item">
-                            <small>Status</small>
+                            <small>AI Processing</small>
                             <div class="mt-2">
                                 <span class="badge-status">
-                                    <i class="bi bi-send-fill me-2"></i> {{ status }}
+                                    <i class="bi bi-stars me-2"></i> AI Summary Created
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="meta-item">
+                            <small>Dispatch Status</small>
+                            <div class="mt-2">
+                                <span class="badge-status" style="background: #e8f5e9; color: var(--success-green);">
+                                    <i class="bi bi-check2-all me-2"></i> {{ status }}
                                 </span>
                             </div>
                         </div>
                         
                         <p class="small text-muted mt-5">
-                            Our <strong>{{ team }}</strong> has been notified. A formal response will be dispatched to your registered email address.
+                            Our <strong>{{ team }}</strong> experts have been notified. A detailed brief has been generated to expedite your request.
                         </p>
+
                         {% elif not warning %}
                         <div class="text-center py-5">
                             <i class="bi bi-journal-text fs-1 text-muted opacity-25"></i>
@@ -277,11 +302,25 @@
 
         <footer class="mt-5 text-center">
             <p class="text-muted" style="font-size: 0.8rem; letter-spacing: 1px;">
-                &copy; 2025 MODERNE RETAIL GROUP. ALL RIGHTS RESERVED.
+                &copy; 2025 MODERNE RETAIL GROUP. POWERED BY GEMINI 2.0.
             </p>
         </footer>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const form = document.getElementById('queryForm');
+        const btn = document.getElementById('submitBtn');
+
+        form.onsubmit = function() {
+            // Prevent multiple clicks
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Routing Case...`;
+            
+            // Allow a small delay for the spinner to be visible before form submission
+            return true;
+        };
+    </script>
 </body>
 </html>
