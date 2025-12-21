@@ -3,7 +3,6 @@ from sklearn.model_selection import train_test_split
 
 def load_and_split_data(csv_path, test_size=0.3, random_state=42):
     df = pd.read_csv(csv_path)
-    df = df.drop(columns=["Unnamed: 0"], errors="ignore")
 
     X = df["User Query"]
     y_intent = df["User Intent"]
